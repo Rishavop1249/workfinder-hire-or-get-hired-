@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Settings - WorkFinder</title>
+  <title>Settings</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,31 +13,20 @@
     <a href="browse.html">Browse Jobs</a>
     <a href="post.html">Post a Job</a>
     <a href="settings.html">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
+    <a href="#" onclick="localStorage.removeItem('user');location.href='login.html'">Logout</a>
   </nav>
 </header>
-
 <main class="form-section">
   <h2>Settings</h2>
-  <div class="settings-options">
-    <button onclick="toggleDarkMode()" class="btn">🌓 Toggle Dark/Light Mode</button>
-    <br><br>
-    <a href="your_jobs.html" class="btn">📋 Your Posted Jobs</a>
-  </div>
+  <button class="btn" onclick="toggleDarkMode()">🌓 Toggle Dark/Light</button><br><br>
+  <a href="your_jobs.html" class="btn">📋 Your Posted Jobs</a>
 </main>
-
 <script>
-  function logout() {
-    localStorage.removeItem("user");
-    window.location.href = "login.html";
-  }
-  function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-  }
-  if (localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
 </script>
 </body>
 </html>

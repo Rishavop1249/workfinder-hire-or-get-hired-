@@ -1,51 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>WorkFinder</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header class="navbar">
-  <h1>WorkFinder</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="browse.html">Browse Jobs</a>
-    <a href="post.html">Post a Job</a>
-    <a href="#" onclick="toggleDarkMode()">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
-  </nav>
-</header>
+  <title>index.html</title>
+  
+<!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<!-- Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+<!-- Optional: Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+
 <script>
-  function logout() {
-    localStorage.removeItem("user");
-    location.href = "login.html";
-  }
-  function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-  }
-  if (localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6z7reXcmqHUHxy...GIZbNTGxHwI",
+    authDomain: "work-finder-e492d.firebaseapp.com",
+    projectId: "work-finder-e492d",
+    storageBucket: "work-finder-e492d.appspot.com",
+    messagingSenderId: "590061410491",
+    appId: "1:590061410491:web:140bce05c286e7ed4b719e",
+    measurementId: "G-8L76SWYTJE"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 </script>
 
-
-  <main class="hero">
-    <h2>Hire people or find work easily</h2>
-    <p>Small businesses meet local workers here.</p>
-    <div>
-      <a href="browse.html" class="btn">Browse Jobs</a>
-      <a href="post.html" class="btn">Post a Job</a>
-    </div>
-  </main>
-
-  <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      alert("Please log in to access the site.");
-      window.location.href = "login.html";
-    }
-  </script>
+</head>
+<body>
+  <h1>Welcome to WorkFinder Home Page</h1>
 </body>
 </html>

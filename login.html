@@ -2,40 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - WorkFinder</title>
+  <title>Login</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="navbar">
-    <h1>WorkFinder</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="browse.html">Browse Jobs</a>
-      <a href="post.html">Post a Job</a>
-    </nav>
-  </header>
-
-  <main class="form-section">
-    <h2>Login</h2>
-    <form id="login-form">
-      <input type="text" id="name" placeholder="Name" required>
-      <input type="number" id="age" placeholder="Age" required>
-      <input type="text" id="location" placeholder="Location" required>
-      <button type="submit" class="btn">Login</button>
-    </form>
-  </main>
-
-  <script>
-    document.getElementById("login-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const user = {
-        name: document.getElementById("name").value,
-        age: document.getElementById("age").value,
-        location: document.getElementById("location").value
-      };
-      localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "dashboard.html";
-    });
-  </script>
+<header class="navbar">
+  <h1>WorkFinder</h1>
+  <nav>
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+<main class="form-section">
+  <h2>Login</h2>
+  <form id="login-form">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="number" id="age" placeholder="Age" required>
+    <input type="text" id="location" placeholder="Location" required>
+    <button type="submit" class="btn">Login</button>
+  </form>
+</main>
+<script>
+document.getElementById("login-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const user = {
+    name: document.getElementById("name").value,
+    age: document.getElementById("age").value,
+    location: document.getElementById("location").value
+  };
+  localStorage.setItem("user", JSON.stringify(user));
+  window.location.href = 'browse.html';
+});
+</script>
 </body>
 </html>

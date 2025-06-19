@@ -2,8 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Your Posted Jobs - WorkFinder</title>
+  <title>Your Posted Jobs</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6z7reXcmqHUHxy...GIZbNTGxHwI",
+      authDomain: "work-finder-e492d.firebaseapp.com",
+      projectId: "work-finder-e492d",
+      storageBucket: "work-finder-e492d.appspot.com",
+      messagingSenderId: "590061410491",
+      appId: "1:590061410491:web:140bce05c286e7ed4b719e",
+      measurementId: "G-8L76SWYTJE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
 <header class="navbar">
@@ -13,67 +28,39 @@
     <a href="browse.html">Browse Jobs</a>
     <a href="post.html">Post a Job</a>
     <a href="settings.html">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
+    <a href="#" onclick="localStorage.removeItem('user');location.href='login.html'">Logout</a>
   </nav>
 </header>
-
 <main class="form-section">
   <h2>Your Posted Jobs</h2>
   <ul id="job-list"></ul>
 </main>
-
 <script>
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) {
-    alert("Login required.");
-    window.location.href = "login.html";
-  }
+const user = JSON.parse(localStorage.getItem('user'));
+if (!user) location.href = 'login.html';
 
-  const jobList = document.getElementById("job-list");
-  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-  function saveJobs(updated) {
-    localStorage.setItem("jobs", JSON.stringify(updated));
-    location.reload();
-  }
-
-  jobs.forEach((job, index) => {
-    if (job.postedBy === user.name) {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${job.title}</strong> - ${job.description}
-        <button onclick="editJob(${index})">Edit</button>
-        <button onclick="deleteJob(${index})">Remove</button>
-      `;
-      jobList.appendChild(li);
-    }
+db.collection('jobs').where('postedBy', '==', user.name).get().then(function(snap) {
+  const ul = document.getElementById('job-list');
+  snap.forEach(function(doc) {
+    const job = doc.data();
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${job.title}</strong> - ${job.company} 
+      <button onclick="edit('${doc.id}')">Edit</button> 
+      <button onclick="remove('${doc.id}')">Remove</button>`;
+    ul.appendChild(li);
   });
+});
 
-  function editJob(index) {
-    const newTitle = prompt("Edit job title:", jobs[index].title);
-    const newDesc = prompt("Edit job description:", jobs[index].description);
-    if (newTitle && newDesc) {
-      jobs[index].title = newTitle;
-      jobs[index].description = newDesc;
-      saveJobs(jobs);
-    }
-  }
+function edit(id) {
+  const t = prompt('New title:');
+  if (t) db.collection('jobs').doc(id).update({ title: t });
+}
 
-  function deleteJob(index) {
-    if (confirm("Are you sure you want to remove this job?")) {
-      jobs.splice(index, 1);
-      saveJobs(jobs);
-    }
+function remove(id) {
+  if (confirm('Delete?')) {
+    db.collection('jobs').doc(id).delete().then(() => location.reload());
   }
-
-  function logout() {
-    localStorage.removeItem("user");
-    window.location.href = "login.html";
-  }
-
-  if (localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
+}
 </script>
 </body>
 </html>

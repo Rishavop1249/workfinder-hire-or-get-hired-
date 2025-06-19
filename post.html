@@ -1,73 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Post a Job - WorkFinder</title>
+  <title>Post a Job</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6z7reXcmqHUHxy...GIZbNTGxHwI",
+      authDomain: "work-finder-e492d.firebaseapp.com",
+      projectId: "work-finder-e492d",
+      storageBucket: "work-finder-e492d.appspot.com",
+      messagingSenderId: "590061410491",
+      appId: "1:590061410491:web:140bce05c286e7ed4b719e",
+      measurementId: "G-8L76SWYTJE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
-<header class="navbar">
-  <h1>WorkFinder</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="browse.html">Browse Jobs</a>
-    <a href="post.html">Post a Job</a>
-    <a href="#" onclick="toggleDarkMode()">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
-  </nav>
-</header>
-<script>
-  function logout() {
-    localStorage.removeItem("user");
-    location.href = "login.html";
-  }
-  function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-  }
-  if (localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-  }
-</script>
-
-
-  <main class="form-section">
-    <form id="job-form">
-      <input type="text" id="title" placeholder="Job Title" required>
-      <input type="text" id="company" placeholder="Company Name" required>
-      <input type="text" id="location" placeholder="Location" required>
-      <input type="text" id="type" placeholder="Job Type (Full-time, Part-time, etc.)" required>
-      <button type="submit" class="btn">Post Job</button>
-      <p id="confirmation"></p>
-    </form>
-  </main>
+  <h1>Post a Job</h1>
+  <form id="jobForm">
+    <input type="text" id="title" placeholder="Job Title" required><br>
+    <input type="text" id="company" placeholder="Company" required><br>
+    <input type="text" id="location" placeholder="Location" required><br>
+    <input type="text" id="type" placeholder="Type (e.g. Full-Time)" required><br>
+    <button type="submit">Post Job</button>
+  </form>
 
   <script>
-    document.getElementById("job-form").addEventListener("submit", function(e) {
+    document.getElementById("jobForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-
       const job = {
         title: document.getElementById("title").value,
         company: document.getElementById("company").value,
         location: document.getElementById("location").value,
-        type: document.getElementById("type").value
+        type: document.getElementById("type").value,
+        created: firebase.firestore.FieldValue.serverTimestamp()
       };
-
-      const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
-      jobs.push(job);
-      localStorage.setItem("jobs", JSON.stringify(jobs));
-
-      document.getElementById("job-form").reset();
-      document.getElementById("confirmation").innerText = "Job posted successfully!";
+      try {
+        await db.collection("jobs").add(job);
+        alert("Job posted successfully!");
+        e.target.reset();
+      } catch (err) {
+        console.error("Error posting job:", err);
+        alert("Failed to post job.");
+      }
     });
   </script>
 </body>
 </html>
-
-<script>
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) {
-    alert("You must be logged in to access this page.");
-    window.location.href = "login.html";
-  }
-</script>
