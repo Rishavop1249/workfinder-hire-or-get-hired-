@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - WorkFinder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="navbar">
+    <h1>WorkFinder</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="browse.html">Browse Jobs</a>
+      <a href="post.html">Post a Job</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main class="form-section">
+    <h2 id="welcome-message"></h2>
+    <p>Welcome to your dashboard. Browse or post jobs freely.</p>
+  </main>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("welcome-message").innerText =
+        `Welcome, ${user.name} from ${user.location} (Age: ${user.age})`;
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

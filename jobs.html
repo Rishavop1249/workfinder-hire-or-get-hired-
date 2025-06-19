@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Jobs - JobFinder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Available Jobs</h1>
+    <nav><a href="post.html">Post a New Job</a></nav>
+    <input type="text" id="search" placeholder="Search for jobs...">
+  </header>
+
+  <main id="job-listings">
+    <!-- Jobs will load here -->
+  </main>
+
+  <script>
+    function loadJobs(filter = "") {
+      const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+      const jobListings = document.getElementById("job-listings");
+      jobListings.innerHTML = "";
+
+      jobs.filter(job => job.title.toLowerCase().includes(filter.toLowerCase()))
+          .forEach(job => {
+            const jobEl = document.createElement("div");
+            jobEl.className = "job";
+            jobEl.innerHTML = `
+              <h2>${job.title}</h2>
+              <p><strong>${job.company}</strong></p>
+              <p>${job.location} — ${job.type}</p>
+            `;
+            jobListings.appendChild(jobEl);
+          });
+    }
+
+    document.getElementById("search").addEventListener("input", e => {
+      loadJobs(e.target.value);
+    });
+
+    loadJobs();
+  </script>
+</body>
+</html>

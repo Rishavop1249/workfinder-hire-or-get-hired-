@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Posted Jobs - WorkFinder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="navbar">
+  <h1>WorkFinder</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="browse.html">Browse Jobs</a>
+    <a href="post.html">Post a Job</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<main class="form-section">
+  <h2>Your Posted Jobs</h2>
+  <ul id="job-list"></ul>
+</main>
+
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    alert("Login required.");
+    window.location.href = "login.html";
+  }
+
+  const jobList = document.getElementById("job-list");
+  const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+  function saveJobs(updated) {
+    localStorage.setItem("jobs", JSON.stringify(updated));
+    location.reload();
+  }
+
+  jobs.forEach((job, index) => {
+    if (job.postedBy === user.name) {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${job.title}</strong> - ${job.description}
+        <button onclick="editJob(${index})">Edit</button>
+        <button onclick="deleteJob(${index})">Remove</button>
+      `;
+      jobList.appendChild(li);
+    }
+  });
+
+  function editJob(index) {
+    const newTitle = prompt("Edit job title:", jobs[index].title);
+    const newDesc = prompt("Edit job description:", jobs[index].description);
+    if (newTitle && newDesc) {
+      jobs[index].title = newTitle;
+      jobs[index].description = newDesc;
+      saveJobs(jobs);
+    }
+  }
+
+  function deleteJob(index) {
+    if (confirm("Are you sure you want to remove this job?")) {
+      jobs.splice(index, 1);
+      saveJobs(jobs);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  }
+
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark-mode");
+  }
+</script>
+</body>
+</html>
